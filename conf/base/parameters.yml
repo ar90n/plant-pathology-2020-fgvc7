@@ -1,0 +1,15 @@
+n_folds: 5
+val_fold: 0
+batch_size: 64
+max_epochs: 20
+gpus: 1
+
+data:
+  raw: "data/01_raw"
+  intermediate: "data/02_intermediate"
+  primary: "data/03_primary"
+  feature: "data/04_feature"
+  model_input: "data/05_model_input"
+  models: "data/06_models"
+  model_output: "data/07_model_output"
+  reporting: "data/08_reporting"

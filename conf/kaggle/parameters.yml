@@ -1,0 +1,9 @@
+data:
+  raw: "/kaggle/input/"
+  intermediate: "data/02_intermediate"
+  primary: "data/03_primary"
+  feature: "data/04_feature"
+  model_input: "data/05_model_input"
+  models: "data/06_models"
+  model_output: "data/07_model_output"
+  reporting: "data/08_reporting"

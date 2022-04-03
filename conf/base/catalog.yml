@@ -1,0 +1,118 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://kedro.readthedocs.io/en/stable/05_data/01_data_catalog.html
+train_csv:
+  type: pandas.CSVDataSet
+  filepath: "${data.raw}/plant-pathology-2020-fgvc7/train.csv"
+  layer: raw
+
+test_csv:
+  type: pandas.CSVDataSet
+  filepath: ${data.raw}/plant-pathology-2020-fgvc7/test.csv
+  layer: raw
+
+data_preprocess.train_with_fold:
+  type: pandas.CSVDataSet
+  filepath: ${data.intermediate}/train_with_fold.csv
+  layer: intermediate
+
+
+# Datamodules
+_datamodule: &datamodule
+  type: MemoryDataSet
+  layer: model_input
+
+datamodule_fold_0:
+  <<: *datamodule
+
+datamodule_fold_1:
+  <<: *datamodule
+
+datamodule_fold_2:
+  <<: *datamodule
+
+datamodule_fold_3:
+  <<: *datamodule
+
+datamodule_fold_4:
+  <<: *datamodule
+
+# Classifier models
+_classifier_model: &classifier_model
+  type: plant_pathology_2020_fgvc7.extras.datasets.torch_model.TorchModel
+  versioned: True
+  layer: models
+
+classifier_fold_0:
+  <<: *classifier_model
+  filepath: ${data.models}/classifier_fold_0.pt
+
+classifier_fold_1:
+  <<: *classifier_model
+  filepath: ${data.models}/classifier_fold_1.pt
+
+classifier_fold_2:
+  <<: *classifier_model
+  filepath: ${data.models}/classifier_fold_2.pt
+
+classifier_fold_3:
+  <<: *classifier_model
+  filepath: ${data.models}/classifier_fold_3.pt
+
+classifier_fold_4:
+  <<: *classifier_model
+  filepath: ${data.models}/classifier_fold_4.pt
+
+
+# Classifier outputs
+_classifier_output: &_classifier_output
+  type: pickle.PickleDataSet
+  versioned: True
+  layer: model_output
+
+classifier_val_output_fold_0:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_val_output_fold_0.pkl
+
+classifier_val_output:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_val_output.pkl
+
+submission_pipeline.classifier_test_output_fold_0:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_test_output_fold_0.pkl
+
+submission_pipeline.classifier_test_output_fold_1:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_test_output_fold_1.pkl
+
+submission_pipeline.classifier_test_output_fold_2:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_test_output_fold_2.pkl
+
+submission_pipeline.classifier_test_output_fold_3:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_test_output_fold_3.pkl
+
+submission_pipeline.classifier_test_output_fold_4:
+  <<: *_classifier_output
+  filepath: ${data.model_output}/classifier_test_output_fold_4.pkl
+
+submission:
+  type: pandas.CSVDataSet
+  filepath: ${data.reporting}/submission.csv
+  versioned: True
+  layer: reporting
+
+metrics:
+  type: json.JSONDataSet
+  filepath: ${data.reporting}/metrics.csv
+  versioned: True
+  layer: reporting
+
+metrics_dev:
+  type: json.JSONDataSet
+  filepath: ${data.reporting}/metrics_dev.csv
+  versioned: True
+  layer: reporting
